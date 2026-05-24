@@ -25,8 +25,42 @@ print(tamanho)
 #Analise exploratória
 
 #data da venda
-agrupado=dataset["DATA DA VENDA"].value_counts()
-print(agrupado)
+agrupado_0=dataset["DATA DA VENDA"].value_counts()
+print(agrupado_0)
 
 #setor
+agrupado_1=dataset["SETOR"].value_counts()
+print(agrupado_1)
+
+#produto
+agrupado_2=dataset["PRODUTO"].value_counts()
+print(agrupado_2)
+
+#vendedor
+agrupado_3=dataset["VENDEDOR"].value_counts()
+print(agrupado_3)
+
+#região
+agrupado_4=dataset["REGIÃO"].value_counts()
+print(agrupado_4)
+
+#estado
+agrupado_5=dataset["ESTADO"].value_counts()
+print(agrupado_5)
+
+#cliente
+agrupado_6=dataset["CLIENTE"].value_counts()
+print(agrupado_6)
+
+#faturamento
+agrupado_7=dataset["FATURAMENTO"].value_counts()
+print(agrupado_7)
+
+#margem de lucro
+agrupado_8=dataset["MARGEM DE LUCRO"].value_counts()
+print(agrupado_8)
+
+#lucro
+agrupado_9=dataset["LUCRO"].value_counts()
+print(agrupado_9)
 
