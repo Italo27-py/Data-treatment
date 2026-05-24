@@ -53,14 +53,30 @@ agrupado_6=dataset["CLIENTE"].value_counts()
 print(agrupado_6)
 
 #faturamento
-agrupado_7=dataset["FATURAMENTO"].value_counts()
-print(agrupado_7)
+#agrupado_7=dataset["FATURAMENTO"].describe() #variavel numerica
+#print(agrupado_7)
 
 #margem de lucro
-agrupado_8=dataset["MARGEM DE LUCRO"].value_counts()
-print(agrupado_8)
+#agrupado_8=dataset["MARGEM DE LUCRO"].describe() #variavel numerica
+#print(agrupado_8)
 
 #lucro
-agrupado_9=dataset["LUCRO"].value_counts()
-print(agrupado_9)
+#agrupado_9=dataset["LUCRO"].describe() #variavel numerica
+#print(agrupado_9)
+
+#checkando dados faltantes
+vazio=dataset.isnull().sum()
+print(vazio)
+
+#iniciando tratamento
+
+dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00")
+dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
+dataset["PRODUTO"] = dataset["PRODUTO"].fillna("Queijo")
+dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
+dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
+dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
+
+
+
 
