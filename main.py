@@ -74,9 +74,37 @@ dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00"
 dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
 dataset["PRODUTO"] = dataset["PRODUTO"].fillna("Queijo")
 dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
-dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
 dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
 
+#Tratando da parte região e estado
+ #Se ESTADO existe e REGIÃO está vazia → preencher REGIÃO com base no ESTADO.
+ #Se REGIÃO existe e ESTADO está vazio → preencher ESTADO com base na REGIÃO.
+ #Se os dois estão vazios → colocar Sudeste e Rio de Janeiro
 
+#Tratando tabelas numéricas
+
+c_n = ["FATURAMENTO", "MARGEM DE LUCRO", "LUCRO"]
+
+for coluna in c_n:
+    dataset[coluna]= dataset[coluna].astype(str).str.replace(",",".", regex=False)
+    dataset[coluna] = pd.to_numeric(dataset[coluna], errors="coerce")
+
+#faturamento
+agrupado_7=dataset["FATURAMENTO"].describe() #variavel numerica
+print(agrupado_7)
+
+#margem de lucro
+agrupado_8=dataset["MARGEM DE LUCRO"].describe() #variavel numerica
+print(agrupado_8)
+
+#lucro
+agrupado_9=dataset["LUCRO"].describe() #variavel numerica
+print(agrupado_9)
+
+dataset["FATURAMENTO"] = dataset["FATURAMENTO"].fillna(896.626673)
+dataset["MARGEM DE LUCRO"] = dataset["MARGEM DE LUCRO"].fillna(0.119311)
+dataset["LUCRO"] = dataset["LUCRO"].fillna(3.474494e+03)
+
+print(dataset.head(50).to_string())
 
 
