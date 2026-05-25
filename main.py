@@ -181,3 +181,6 @@ dataset = dataset[colunas_ordenadas]
 
 print(dataset.head(50).to_string())
 
+dataset.to_csv(r"D:\pyhton\projeto\dados_tratados.csv", index=False)
+
+print("Arquivo dados_tratados.csv criado com sucesso!")
