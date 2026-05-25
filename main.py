@@ -72,8 +72,7 @@ print(vazio)
 #iniciando tratamento
 
 dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00")
-dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
-dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
+
 
 #Tratando da parte região e estado
  # Se a região está vazia - colocar sudeste
@@ -85,17 +84,12 @@ dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
 dataset["REGIÃO"] = dataset["REGIÃO"].astype("string").str.strip()
 
 from module_port import correcao_regiao
-
 dataset["REGIÃO"] = dataset["REGIÃO"].replace(correcao_regiao)
-
-
-
-
 
 dataset = dataset.drop(columns=["ESTADO"]) #CRIANDO A COLUNA ESTADO A PARTIR DE REGIÃO
 
 estados_por_regiao = {
-    "Sudeste": ["Rio de Janeiro", "Minas Gerais", "São Paulo",],
+    "Sudeste": ["Rio de Janeiro", "Minas Gerais", "São Paulo"],
     "Sul": ["Paraná", "Santa Catarina", "Rio Grande do Sul"],
     "Nordeste": ["Bahia", "Sergipe", "Rio Grande do Norte"]}
 
@@ -104,11 +98,40 @@ dataset["ESTADO"] = dataset["REGIÃO"].apply(
 
 #Tratando da parte setor e produto
  # Se a região está vazia - Congelados
- # Criar uma nova coluna ESTADO
+ # Criar uma nova coluna PRODUTO
  #arrumar erros de português da região
 
 dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
 
+dataset["SETOR"] = dataset["SETOR"].astype("string").str.strip()
+
+from module_port import correcao_setor
+dataset["SETOR"] = dataset["SETOR"].replace(correcao_setor)
+
+dataset = dataset.drop(columns=["PRODUTO"]) #CRIANDO A COLUNA PRODUTO A PARTIR DE SETOR
+
+produtos_por_setor = {
+    "Carnes": ["Bovina", "Suína", "Frango" ],
+    "Laticínio": ["Queijo", "Sorvete", "Leite", "Coalhada"],
+    "Congelados": ["Pizza", "Lasanha"],
+     "Bebidas": ["Sucos", "Refrigerantes", "Cervejas"]}
+
+dataset["PRODUTO"] = dataset["SETOR"].apply(lambda produto: np.random.choice(produtos_por_setor[produto]))
+
+#Tratando o português de cliente e vendedor
+
+from module_port import correcao_cliente
+from module_port import correcao_vendedor
+
+
+dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
+dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
+
+dataset["VENDEDOR"] = dataset["VENDEDOR"].astype("string").str.strip()
+dataset["CLIENTE"] = dataset["CLIENTE"].astype("string").str.strip()
+
+dataset["VENDEDOR"] = dataset["VENDEDOR"].replace(correcao_vendedor)
+dataset["CLIENTE"] = dataset["CLIENTE"].replace(correcao_cliente)
 
 #Tratando tabelas numéricas
 
@@ -136,9 +159,25 @@ dataset["MARGEM DE LUCRO"] = dataset["MARGEM DE LUCRO"].fillna(0.119311)
 #Arrumar a formatação dos valores
 # 2 casas decimais
 dataset["FATURAMENTO"]=dataset["FATURAMENTO"].round(2)
+dataset["MARGEM DE LUCRO"]=dataset["MARGEM DE LUCRO"].round(2)
+dataset["LUCRO_CALCULADO"] = dataset["LUCRO_CALCULADO"].fillna(106.514631)
 dataset["LUCRO_CALCULADO"]=dataset["LUCRO_CALCULADO"].round(2)
 
+
+colunas_ordenadas = [
+    "DATA DA VENDA",
+    "SETOR",
+    "PRODUTO",
+    "VENDEDOR",
+    "REGIÃO",
+    "ESTADO",
+    "CLIENTE",
+    "FATURAMENTO",
+    "MARGEM DE LUCRO",
+    "LUCRO_CALCULADO"]
+
+dataset = dataset[colunas_ordenadas]
+
+
 print(dataset.head(50).to_string())
-
-
 
