@@ -107,4 +107,11 @@ dataset["LUCRO"] = dataset["LUCRO"].fillna(3.474494e+03)
 
 print(dataset.head(50).to_string())
 
+#Arrumar a formatação dos valores
+# 2 casas decimais
+dataset["FATURAMENTO"]=dataset["FATURAMENTO"].round(2)
+dataset["LUCRO"]=dataset["LUCRO"].round(2)
+
+print(dataset.head(50).to_string())
+
 
