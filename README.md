@@ -1,10 +1,15 @@
+Claro kkk. Deixei com uma linguagem mais natural, menos “formal demais” e com mais cara de texto feito por aluno explicando o próprio projeto:
+
+````markdown
 # Tratamento de Dados - Campe Supply
 
-Este repositório foi criado para documentar o processo de tratamento de dados realizado em Python, utilizando principalmente as bibliotecas Pandas e NumPy. O objetivo principal do projeto foi limpar, corrigir, padronizar e reorganizar uma base de dados corrompida, tornando-a mais adequada para análises futuras.
+Este repositório foi criado para organizar o desenvolvimento do meu projeto de tratamento de dados em Python. A ideia foi trabalhar em cima de uma base corrompida, corrigindo problemas como valores vazios, erros de digitação, dados em formatos incorretos e colunas inconsistentes.
 
-## Objetivo do projeto
+Também utilizei o GitHub para registrar as mudanças feitas no código por meio dos commits, deixando o processo mais organizado e fácil de acompanhar.
 
-O projeto teve como foco o tratamento de uma planilha com inconsistências em dados categóricos, numéricos e valores ausentes. Durante o processo, foram aplicadas técnicas de limpeza, correção de erros de digitação, preenchimento de lacunas vazias, criação de novas colunas e reorganização da estrutura final da tabela.
+## Objetivo
+
+O objetivo principal do projeto foi tratar uma base de dados para deixá-la mais limpa e pronta para futuras análises. Durante o processo, precisei analisar as colunas, entender os problemas existentes e aplicar soluções usando Python, principalmente com a biblioteca Pandas.
 
 ## Tecnologias utilizadas
 
@@ -15,11 +20,11 @@ O projeto teve como foco o tratamento de uma planilha com inconsistências em da
 - Git
 - GitHub
 
-## Principais etapas realizadas
+## Etapas do projeto
 
-### 1. Importação dos dados
+### Importação da base
 
-A base foi importada a partir de um arquivo CSV utilizando a biblioteca Pandas.
+A base foi importada a partir de um arquivo CSV usando o Pandas.
 
 ```python
 import pandas as pd
@@ -27,9 +32,9 @@ import pandas as pd
 dataset = pd.read_csv("Dados_asimov_corrompido.xlsx - Campe Supply.csv")
 ````
 
-### 2. Análise inicial da base
+### Análise inicial
 
-Foram utilizados comandos para visualizar as primeiras linhas da tabela, verificar os nomes das colunas, identificar valores vazios e analisar os tipos de dados.
+No começo, usei alguns comandos para entender melhor a estrutura da tabela, visualizar as primeiras linhas, verificar os nomes das colunas, os tipos de dados e a quantidade de valores vazios.
 
 ```python
 print(dataset.head())
@@ -38,23 +43,25 @@ print(dataset.isna().sum())
 print(dataset.dtypes)
 ```
 
-### 3. Tratamento de valores vazios
+Essa etapa foi importante para saber quais colunas precisavam de tratamento.
 
-Foram tratados valores ausentes em diferentes colunas da base. Em alguns casos, os valores vazios foram preenchidos com base em regras específicas do projeto.
+### Tratamento de valores vazios
 
-Exemplo:
+Durante o tratamento, encontrei várias colunas com valores ausentes. Em alguns casos, foi possível preencher esses espaços com valores padrão.
+
+Um exemplo foi a coluna `SETOR`, onde os valores vazios foram preenchidos como `Congelados`.
 
 ```python
 dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
 ```
 
-No caso das colunas `região` e `ESTADO`, foi adotada uma estratégia mais cuidadosa, pois os dados possuem relação entre si. Como a coluna `ESTADO` apresentava muitas inconsistências, ela foi recriada a partir da coluna `região`, respeitando os estados possíveis para cada região.
+Em outras colunas, como `região` e `ESTADO`, o tratamento exigiu mais atenção, pois não fazia sentido preencher tudo com o valor mais repetido sem considerar a relação entre região e estado.
 
-### 4. Correção de erros de escrita
+### Correção de erros de escrita
 
-Algumas colunas categóricas apresentavam diversos erros de digitação. Para corrigir isso, foram criados dicionários de substituição.
+Algumas colunas tinham muitos erros de digitação, principalmente nas categorias. Por isso, utilizei dicionários de correção para padronizar os nomes.
 
-As principais colunas tratadas foram:
+As principais colunas corrigidas foram:
 
 * `região`
 * `SETOR`
@@ -67,13 +74,13 @@ Exemplo:
 dataset["SETOR"] = dataset["SETOR"].replace(correcao_setor)
 ```
 
-Essa abordagem permitiu padronizar os valores e reduzir inconsistências na base.
+Essa parte foi uma das mais trabalhosas, porque foi necessário verificar os valores únicos das colunas e corrigir os erros encontrados.
 
-### 5. Recriação de colunas com base em regras
+### Recriação de algumas colunas
 
-Algumas colunas estavam muito corrompidas ou não faziam sentido em relação a outras informações. Por isso, foram recriadas com base em regras lógicas.
+Em alguns casos, percebi que era mais viável recriar determinadas colunas a partir de outras informações da tabela.
 
-Por exemplo, a coluna `PRODUTO` foi recriada a partir da coluna `SETOR`.
+A coluna `PRODUTO`, por exemplo, foi recriada a partir da coluna `SETOR`.
 
 ```python
 import numpy as np
@@ -90,7 +97,7 @@ dataset["PRODUTO"] = dataset["SETOR"].apply(
 )
 ```
 
-A mesma lógica foi aplicada para recriar a coluna `ESTADO` com base na coluna `região`.
+Também utilizei uma lógica parecida para recriar a coluna `ESTADO` a partir da coluna `região`, respeitando os estados possíveis para cada região.
 
 ```python
 estados_por_regiao = {
@@ -104,11 +111,9 @@ dataset["ESTADO"] = dataset["região"].apply(
 )
 ```
 
-### 6. Tratamento de valores numéricos
+### Tratamento dos valores numéricos
 
-As colunas numéricas apresentavam valores em formato de texto, principalmente por causa do uso de vírgula como separador decimal.
-
-Por isso, foi feita a conversão para formato numérico.
+As colunas numéricas estavam em formato de texto, principalmente por causa do uso de vírgula como separador decimal. Para conseguir fazer cálculos e análises, foi necessário converter esses dados para números.
 
 ```python
 colunas_numericas = ["FATURAMENTO", "MARGEM DE LUCRO", "LUCRO"]
@@ -118,28 +123,28 @@ for coluna in colunas_numericas:
     dataset[coluna] = pd.to_numeric(dataset[coluna], errors="coerce")
 ```
 
-Após a conversão, foi possível analisar média, mediana, quartis e outros indicadores estatísticos.
+Depois disso, foi possível analisar melhor os dados numéricos com comandos como:
 
 ```python
 print(dataset[colunas_numericas].describe())
 ```
 
-### 7. Criação da coluna de lucro calculado
+### Criação da coluna de lucro calculado
 
-Durante a análise, foi identificado que alguns valores da coluna `LUCRO` não correspondiam ao cálculo esperado a partir de `FATURAMENTO` e `MARGEM DE LUCRO`.
+Durante a análise, percebi que alguns valores da coluna `LUCRO` não batiam com o cálculo feito a partir do `FATURAMENTO` e da `MARGEM DE LUCRO`.
 
-Por isso, foi criada uma nova coluna chamada `LUCRO_CALCULADO`.
+Por isso, criei uma nova coluna chamada `LUCRO_CALCULADO`.
 
 ```python
 dataset["LUCRO_CALCULADO"] = dataset["FATURAMENTO"] * dataset["MARGEM DE LUCRO"]
 dataset["LUCRO_CALCULADO"] = dataset["LUCRO_CALCULADO"].round(2)
 ```
 
-Essa nova coluna garante maior coerência nos dados financeiros.
+Essa coluna foi criada para deixar o valor do lucro mais coerente com os outros dados da tabela.
 
-### 8. Reorganização da tabela
+### Organização final da tabela
 
-Ao final do tratamento, as colunas foram reorganizadas em uma ordem mais lógica para análise.
+Depois dos tratamentos, reorganizei as colunas em uma ordem mais lógica para facilitar a leitura e a análise.
 
 ```python
 colunas_ordenadas = [
@@ -158,15 +163,15 @@ colunas_ordenadas = [
 dataset = dataset[colunas_ordenadas]
 ```
 
-### 9. Exportação do arquivo tratado
+### Exportação da base tratada
 
-Após todos os tratamentos, foi criado um novo arquivo CSV com os dados limpos.
+No final do processo, criei um novo arquivo CSV com a base já tratada.
 
 ```python
 dataset.to_csv("dados_tratados.csv", index=False)
 ```
 
-Também é possível salvar com separador `;`, facilitando a abertura no Excel em português.
+Também é possível salvar usando `;` como separador, o que facilita a abertura do arquivo no Excel.
 
 ```python
 dataset.to_csv("dados_tratados.csv", index=False, sep=";")
@@ -174,26 +179,24 @@ dataset.to_csv("dados_tratados.csv", index=False, sep=";")
 
 ## Aprendizados
 
-Durante o projeto, foi possível praticar conceitos importantes de tratamento de dados, como:
+Durante o projeto, consegui praticar vários pontos importantes do tratamento de dados, como:
 
-* identificação de valores ausentes;
-* padronização de categorias;
+* identificação de valores vazios;
 * correção de erros de digitação;
-* conversão de variáveis para tipos corretos;
+* padronização de categorias;
+* conversão de dados para o tipo correto;
 * criação de novas colunas;
-* uso de regras lógicas para reconstrução de dados;
-* análise estatística inicial com Pandas;
+* uso de regras lógicas para reconstruir informações;
+* organização da tabela final;
 * exportação de uma nova base tratada.
 
-Um dos principais desafios foi lidar com colunas categóricas muito corrompidas, como `região`, `ESTADO`, `SETOR`, `VENDEDOR` e `CLIENTE`. Esse processo mostrou a importância de analisar os valores únicos antes de aplicar qualquer correção automática.
+Uma das maiores dificuldades foi lidar com colunas categóricas muito corrompidas. Em alguns momentos, não dava para simplesmente preencher os dados com o valor mais repetido, porque isso poderia gerar informações incoerentes. Por isso, foi necessário pensar em soluções que fizessem sentido dentro do contexto da tabela.
 
 ## Conclusão
 
-O projeto foi importante para aplicar na prática conceitos de limpeza e preparação de dados. Além de utilizar comandos básicos do Pandas, foi necessário pensar em estratégias coerentes para tratar inconsistências sem comprometer a lógica da base.
+Esse projeto foi importante para colocar em prática o tratamento de dados usando Python. Apesar de algumas etapas parecerem simples no início, a base apresentou vários problemas que exigiram análise e tomada de decisão.
 
-A etapa de tratamento mostrou que dados reais podem apresentar muitos problemas, como valores vazios, erros de escrita, formatos incorretos e informações inconsistentes. Por isso, antes de qualquer análise, é essencial preparar bem a base de dados.
-
-Ao final, foi gerado um novo arquivo tratado, pronto para ser utilizado em análises exploratórias e visualizações futuras.
+Com isso, consegui entender melhor a importância de preparar bem os dados antes de qualquer análise. No final, foi gerado um novo arquivo tratado, mais organizado e pronto para ser usado em futuras análises exploratórias.
 
 ```
 ```
