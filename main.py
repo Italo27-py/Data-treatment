@@ -72,15 +72,13 @@ print(vazio)
 #iniciando tratamento
 
 dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00")
-dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
-dataset["PRODUTO"] = dataset["PRODUTO"].fillna("Queijo")
 dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
 dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
 
 #Tratando da parte região e estado
  # Se a região está vazia - colocar sudeste
  # Criar uma nova coluna ESTADO
- #arrumar erros de português da região
+ #arrumar erros de português da região (criado em um módulo para não poluir o código)
 
 dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
 
@@ -227,6 +225,13 @@ estados_por_regiao = {
 
 dataset["ESTADO"] = dataset["REGIÃO"].apply(
     lambda regiao: np.random.choice(estados_por_regiao[regiao]))
+
+#Tratando da parte setor e produto
+ # Se a região está vazia - Congelados
+ # Criar uma nova coluna ESTADO
+ #arrumar erros de português da região
+
+dataset["SETOR"] = dataset["SETOR"].fillna("Congelados")
 
 
 #Tratando tabelas numéricas
