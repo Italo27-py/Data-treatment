@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import statistics as sts
 
@@ -77,13 +78,160 @@ dataset["VENDEDOR"]= dataset["VENDEDOR"].fillna("Vanessa")
 dataset["CLIENTE"]= dataset["CLIENTE"].fillna("Atacarejo")
 
 #Tratando da parte região e estado
- #Se ESTADO existe e REGIÃO está vazia → preencher REGIÃO com base no ESTADO.
- #Se REGIÃO existe e ESTADO está vazio → preencher ESTADO com base na REGIÃO.
- #Se os dois estão vazios → colocar Sudeste e Rio de Janeiro
+ # Se a região está vazia - colocar sudeste
+ # Criar uma nova coluna ESTADO
+ #arrumar erros de português da região
+
+dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
+
+dataset["REGIÃO"] = dataset["REGIÃO"].astype("string").str.strip()
+
+correcao_regiao = {
+    "bordeste": "Nordeste",
+    "Nordesfe": "Nordeste",
+    "Sml": "Sul",
+    "tul": "Sul",
+    "Sudesxe": "Sudeste",
+    "Sudeyte": "Sudeste",
+    "Sudcste": "Sudeste",
+    "gudeste": "Sudeste",
+    "mul": "Sul",
+    "kordeste": "Nordeste",
+    "Nordesge": "Nordeste",
+    "yul": "Sul",
+    "Svdeste": "Sudeste",
+    "Norxeste": "Nordeste",
+    "gordeste": "Nordeste",
+    "Noroeste": "Nordeste",
+    "Norkeste": "Nordeste",
+    "Sudesme": "Sudeste",
+    "Noqdeste": "Nordeste",
+    "Sdl": "Sul",
+    "Sal": "Sul",
+    "wudeste": "Sudeste",
+    "lordeste": "Nordeste",
+    "qul": "Sul",
+    "Nnrdeste": "Nordeste",
+    "sul": "Sul",
+    "Suderte": "Sudeste",
+    "Nordmste": "Nordeste",
+    "Nordesqe": "Nordeste",
+    "Nerdeste": "Nordeste",
+    "Suteste": "Sudeste",
+    "Noraeste": "Nordeste",
+    "Suueste": "Sudeste",
+    "Noydeste": "Nordeste",
+    "Nojdeste": "Nordeste",
+    "Nordesse": "Nordeste",
+    "Srl": "Sul",
+    "Nocdeste": "Nordeste",
+    "ful": "Sul",
+    "Norseste": "Nordeste",
+    "Nordegte": "Nordeste",
+    "Suveste": "Sudeste",
+    "Nordiste": "Nordeste",
+    "fudeste": "Sudeste",
+    "Suduste": "Sudeste",
+    "Spl": "Sul",
+    "Suweste": "Sudeste",
+    "Suseste": "Sudeste",
+    "Sll": "Sul",
+    "Sudzste": "Sudeste",
+    "Nrrdeste": "Nordeste",
+    "Skl": "Sul",
+    "judeste": "Sudeste",
+    "Nordeyte": "Nordeste",
+    "Sql": "Sul",
+    "qordeste": "Nordeste",
+    "Stl": "Sul",
+    "Suaeste": "Sudeste",
+    "Sudesie": "Sudeste",
+    "oudeste": "Sudeste",
+    "Sudhste": "Sudeste",
+    "pul": "Sul",
+    "jul": "Sul",
+    "Norueste": "Nordeste",
+    "Sqdeste": "Sudeste",
+    "Sfl": "Sul",
+    "Norfeste": "Nordeste",
+    "Nsrdeste": "Nordeste",
+    "Sudesge": "Sudeste",
+    "cordeste": "Nordeste",
+    "Sudesye": "Sudeste",
+    "Noodeste": "Nordeste",
+    "Scdeste": "Sudeste",
+    "Nordeete": "Nordeste",
+    "bul": "Sul",
+    "Sil": "Sul",
+    "Ssl": "Sul",
+    "Notdeste": "Nordeste",
+    "hul": "Sul",
+    "Sudeute": "Sudeste",
+    "mordeste": "Nordeste",
+    "Shl": "Sul",
+    "Nurdeste": "Nordeste",
+    "zordeste": "Nordeste",
+    "Sudegte": "Sudeste",
+    "Sudesze": "Sudeste",
+    "Nordesye": "Nordeste",
+    "oul": "Sul",
+    "yordeste": "Sudeste",
+    "Sudesae": "Sudeste",
+    "Sudesee": "Sudeste",
+    "vudeste": "Sudeste",
+    "Sudaste": "Sudeste",
+    "Sudebte": "Sudeste",
+    "iordeste": "Nordeste",
+    "Ndrdeste": "Nordeste",
+    "Sgl": "Sul",
+    "Sudjste": "Sudeste",
+    "Nordyste": "Nordeste",
+    "Norjeste": "Nordeste",
+    "Nordesue": "Nordeste",
+    "dul": "Sul",
+    "Nordemte": "Nordeste",
+    "Sueeste": "Sudeste",
+    "Swdeste": "Sudeste",
+    "Suleste": "Sudeste",
+    "Sudecte": "Sudeste",
+    "Suieste": "Sudeste",
+    "yudeste": "Sudeste",
+    "Ssdeste": "Sudeste",
+    "Noldeste": "Nordeste",
+    "xordeste": "Nordeste",
+    "Spdeste": "Sudeste",
+    "Supeste": "Sudeste",
+    "Sureste": "Sudeste",
+    "oordeste": "Nordeste",
+    "Nordepte": "Nordeste",
+    "Snl": "Sul",
+    "Nowdeste": "Nordeste",
+    "Sjdeste": "Sudeste",
+    "iudeste": "Sudeste",
+    "wordeste": "Nordeste",
+    "Nzrdeste": "Nordeste",
+    "lul": "Sul"}
+
+dataset["REGIÃO"] = dataset["REGIÃO"].replace(correcao_regiao)
+
+
+
+
+
+dataset = dataset.drop(columns=["ESTADO"]) #CRIANDO A COLUNA ESTADO A PARTIR DE REGIÃO
+
+estados_por_regiao = {
+    "Sudeste": ["Rio de Janeiro", "Minas Gerais", "São Paulo",],
+    "Sul": ["Paraná", "Santa Catarina", "Rio Grande do Sul"],
+    "Nordeste": ["Bahia", "Sergipe", "Rio Grande do Norte"]}
+
+dataset["ESTADO"] = dataset["REGIÃO"].apply(
+    lambda regiao: np.random.choice(estados_por_regiao[regiao]))
+
 
 #Tratando tabelas numéricas
 
-c_n = ["FATURAMENTO", "MARGEM DE LUCRO", "LUCRO"]
+c_n = ["FATURAMENTO", "MARGEM DE LUCRO",]
 
 for coluna in c_n:
     dataset[coluna]= dataset[coluna].astype(str).str.replace(",",".", regex=False)
@@ -97,21 +245,19 @@ print(agrupado_7)
 agrupado_8=dataset["MARGEM DE LUCRO"].describe() #variavel numerica
 print(agrupado_8)
 
-#lucro
-agrupado_9=dataset["LUCRO"].describe() #variavel numerica
-print(agrupado_9)
+#lucro (criando a tablea do zero)
+dataset = dataset.drop(columns=["LUCRO"]) #NOVA TABELA CRIADA
+dataset["LUCRO_CALCULADO"] = dataset["FATURAMENTO"] * dataset["MARGEM DE LUCRO"]
 
 dataset["FATURAMENTO"] = dataset["FATURAMENTO"].fillna(896.626673)
 dataset["MARGEM DE LUCRO"] = dataset["MARGEM DE LUCRO"].fillna(0.119311)
-dataset["LUCRO"] = dataset["LUCRO"].fillna(3.474494e+03)
-
-print(dataset.head(50).to_string())
 
 #Arrumar a formatação dos valores
 # 2 casas decimais
 dataset["FATURAMENTO"]=dataset["FATURAMENTO"].round(2)
-dataset["LUCRO"]=dataset["LUCRO"].round(2)
+dataset["LUCRO_CALCULADO"]=dataset["LUCRO_CALCULADO"].round(2)
 
 print(dataset.head(50).to_string())
+
 
 
