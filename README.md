@@ -1,6 +1,4 @@
-Claro kkk. Deixei com uma linguagem mais natural, menos “formal demais” e com mais cara de texto feito por aluno explicando o próprio projeto:
 
-````markdown
 # Tratamento de Dados - Campe Supply
 
 Este repositório foi criado para organizar o desenvolvimento do meu projeto de tratamento de dados em Python. A ideia foi trabalhar em cima de uma base corrompida, corrigindo problemas como valores vazios, erros de digitação, dados em formatos incorretos e colunas inconsistentes.

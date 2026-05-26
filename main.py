@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import statistics as sts
 
 #Data import
 dataset=pd.read_csv("Dados_asimov_corrompido.xlsx - Campe Supply.csv")
@@ -72,6 +70,11 @@ print(vazio)
 #iniciando tratamento
 
 dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00")
+# Converter coluna de data para formato datetime
+dataset["DATA DA VENDA"] = pd.to_datetime(dataset["DATA DA VENDA"], errors="coerce")
+
+# Deixar no formato brasileiro
+dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].dt.strftime("%d/%m/%Y")
 
 
 #Tratando da parte região e estado
@@ -79,22 +82,29 @@ dataset["DATA DA VENDA"] = dataset["DATA DA VENDA"].fillna("2035-01-31 00:00:00"
  # Criar uma nova coluna ESTADO
  #arrumar erros de português da região (criado em um módulo para não poluir o código)
 
-dataset["REGIÃO"]= dataset["REGIÃO"].fillna("Sudeste")
+dataset["ESTADO"] = dataset["ESTADO"].fillna("Rio de Janeiro")
 
-dataset["REGIÃO"] = dataset["REGIÃO"].astype("string").str.strip()
+dataset["ESTADO"] = dataset["ESTADO"].astype("string").str.strip()
 
-from module_port import correcao_regiao
-dataset["REGIÃO"] = dataset["REGIÃO"].replace(correcao_regiao)
+from module_port import correcao_estado
+dataset["ESTADO"] = dataset["ESTADO"].replace(correcao_estado)
 
-dataset = dataset.drop(columns=["ESTADO"]) #CRIANDO A COLUNA ESTADO A PARTIR DE REGIÃO
+dataset = dataset.drop(columns=["REGIÃO"]) #CRIANDO A COLUNA REGIÃO A PARTIR DO ESTADO
 
-estados_por_regiao = {
-    "Sudeste": ["Rio de Janeiro", "Minas Gerais", "São Paulo"],
-    "Sul": ["Paraná", "Santa Catarina", "Rio Grande do Sul"],
-    "Nordeste": ["Bahia", "Sergipe", "Rio Grande do Norte"]}
+regiao_por_estado = {
+    "Rio de Janeiro": "Sudeste",
+    "Minas Gerais": "Sudeste",
+    "São Paulo": "Sudeste",
 
-dataset["ESTADO"] = dataset["REGIÃO"].apply(
-    lambda regiao: np.random.choice(estados_por_regiao[regiao]))
+    "Paraná": "Sul",
+    "Santa Catarina": "Sul",
+    "Rio Grande do Sul": "Sul",
+
+    "Bahia": "Nordeste",
+    "Sergipe": "Nordeste",
+    "Rio Grande do Norte": "Nordeste"}
+
+dataset["REGIÃO"] = dataset["ESTADO"].apply(lambda estado: regiao_por_estado[estado])
 
 #Tratando da parte setor e produto
  # Se a região está vazia - Congelados
@@ -181,6 +191,6 @@ dataset = dataset[colunas_ordenadas]
 
 print(dataset.head(50).to_string())
 
-dataset.to_csv(r"D:\pyhton\projeto\dados_tratados.xlsx", index=False)
+dataset.to_csv(r"D:\pyhton\projeto\dados_tratados_asimov.xlsx", index=False)
 
 print("Arquivo dados_tratados.csv criado com sucesso!")
